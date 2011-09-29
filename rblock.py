@@ -16,9 +16,9 @@ visited = {}
 # A heap of States.
 frontier = []
 
-def print_graph():
-    for k, v in graph.items():
-        print("%s: %s" % (k, v))
+def print_puzzle():
+    for y in reversed(range(len(puzzle[0]))):
+        print("".join([puzzle[x][y] for x in range(len(puzzle))]))
 
 def init_graph(edges):
     for a, b, cost in edges:
