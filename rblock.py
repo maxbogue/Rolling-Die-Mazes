@@ -79,11 +79,11 @@ class Node(object):
         self.parent = parent
     
     def expand(self):
-        for neighbor, cost in graph[self.state]:
-            next_cost = self.cost + cost
+        visited[self.state] = self.cost
+        for neighbor in self.state.neighbors():
+            next_cost = self.cost + 1
             if neighbor not in visited or next_cost < visited[neighbor]:
-                heappush(frontier, State(neighbor, next_cost, self))
-                visited[neighbor] = next_cost
+                heappush(frontier, Node(neighbor, next_cost, self))
     
     def unwind(self):
         if self.parent == None:
