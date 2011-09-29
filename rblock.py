@@ -50,15 +50,15 @@ class State(object):
         )
     
     def neighbors(self):
-        """Naively return ALL neighbors of this state."""
-        # Faces: (up, north, east)
+        """Return all valid neighbors of this state."""
+        # Die faces: (up, north, east)
         (u, n, e) = self.die
-        return [
+        return filter(State.is_valid, [
             State(self.x, self.y + 1, (7 - n, u, e), "N"), # North
             State(self.x, self.y - 1, (n, 7 - u, e), "S"), # South
             State(self.x + 1, self.y, (7 - e, n, u), "E"), # East
             State(self.x - 1, self.y, (e, n, 7 - u), "W"), # West
-        ]
+        ])
     
     def __equal__(self, o):
         return self.x == o.x and self.y == o.y and self.die == o.die
