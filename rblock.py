@@ -26,14 +26,46 @@ def init_graph(edges):
         graph.setdefault(b, []).append((a, cost))
 
 class State(object):
-    """Represents a state in the algorithm."""
-    def __init__(self, node, cost, parent):
-        self.node = node
+    """Represents a configuration of the problem space."""
+    
+    def __init__(self, x, y, die, action):
+        self.x = x
+        self.y = y
+        self.die = die
+        self.action = action
+    
+    @staticmethod
+    def is_valid(state):
+        return 0 <= state.x < 
+    
+    def neighbors(self):
+        """Naively return ALL neighbors of this state."""
+        # Faces: (up, north, east)
+        (u, n, e) = self.die
+        return [
+            State(self.x, self.y + 1, (7 - n, u, e), "N"), # North
+            State(self.x, self.y - 1, (n, 7 - u, e), "S"), # South
+            State(self.x + 1, self.y, (7 - e, n, u), "E"), # East
+            State(self.x - 1, self.y, (e, n, 7 - u), "W"), # West
+        ]
+    
+    def __equal__(self, o):
+        return self.x == o.x and self.y == o.y and self.die == o.die
+    
+    def __hash__(self):
+        return hash((x, y, dice))
+    
+
+class Node(object):
+    """Represents a node in the algorithm search tree."""
+    
+    def __init__(self, state, cost, parent):
+        self.state = state
         self.cost = cost
         self.parent = parent
     
     def expand(self):
-        for neighbor, cost in graph[self.node]:
+        for neighbor, cost in graph[self.state]:
             next_cost = self.cost + cost
             if neighbor not in visited or next_cost < visited[neighbor]:
                 heappush(frontier, State(neighbor, next_cost, self))
@@ -41,23 +73,23 @@ class State(object):
     
     def unwind(self):
         if self.parent == None:
-            return [self.node]
+            return [self.state]
         else:
             path = self.parent.unwind()
-            path.append(self.node)
+            path.append(self.state)
             return path
     
     def is_outdated(self):
-        return self.node in visited and visited[self.node] < self.cost
+        return self.state in visited and visited[self.state] < self.cost
     
     def __lt__(self, other):
         """Used by built-in sorting algorithms."""
         return self.cost < other.cost
 
 def uniform_cost_search(start, goal):
-    assert start in graph, "Invalid start node '%s'" % start
-    assert goal in graph, "Invalid goal node '%s'" % goal
-    frontier.append(State(start, 0, None))
+    assert start in graph, "Invalid start state '%s'" % start
+    assert goal in graph, "Invalid goal state '%s'" % goal
+    frontier.append(Node(start, 0, None))
     while True:
         if len(frontier) == 0:
             return ["FAIL"]
