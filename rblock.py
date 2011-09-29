@@ -60,15 +60,15 @@ class State(object):
             State(self.x - 1, self.y, (e, n, 7 - u), "W"), # West
         ])
     
-    def __equal__(self, o):
-        return self.x == o.x and self.y == o.y and self.die == o.die
-    def __str__(self):
-        return "<%s, %s %s>" % (self.x, self.y, self.die)
-    __repr__ = __str__
+    def __eq__(self, o):
+        return isinstance(o, State) and self.x == o.x and self.y == o.y and self.die == o.die
     
     def __hash__(self):
         return hash((self.x, self.y, self.die))
     
+    def __str__(self):
+        return "<%s, %s %s>" % (self.x, self.y, self.die)
+    __repr__ = __str__
 
 class Node(object):
     """Represents a node in the algorithm search tree."""
