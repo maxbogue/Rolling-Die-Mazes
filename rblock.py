@@ -136,11 +136,47 @@ def a_star_search(start):
         else:
             node.expand()
 
+# Heuristics!
+
+def euclidean_distance(state):
+    return ((state.x - goal_loc[0]) ** 2 + (state.y - goal_loc[1]) ** 2) ** 0.5
+
+def manhattan_distance(state):
+    return abs(state.x - goal_loc[0]) + abs(state.y - goal_loc[1])
+
+# Path distances for the path heuristic.
+distances = []
+
+def generate_distances():
+    """A breadth first search to find distances from the goal for each loc."""
+    global distances
+    # Copy the puzzle.
+    distances = list(map(list, puzzle))
+    def unseen(v):
+        x, y = v
+        return valid_space(x, y) and type(distances[x][y]) != int
+    def next_states(x, y):
+        return filter(unseen, [
+            (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)
+        ])
+    frontier = [(goal_loc[0], goal_loc[1])]
+    d = 0
+    while len(frontier) > 0:
+        layer = list(frontier)
+        frontier = set([])
+        for x, y in layer:
+            distances[x][y] = d
+            frontier.update(next_states(x, y))
+        d += 1
+
+def path_distance(state):
+    return distances[state.x][state.y]
+
 def main():
     if len(argv) < 2:
         print("Usage: rblock.py puzzle_file")
         exit(1)
-    global puzzle, goal_loc
+    global puzzle, goal_loc, heuristic
     start = None
     with open(argv[1], 'r') as f:
         lines = f.read().splitlines()
@@ -169,7 +205,21 @@ def main():
     if goal_loc == None:
         print("No goal location detected!")
         exit(1)
-    print(a_star_search(start, goal_loc))
+    def print_results():
+        path, nvisited, ngenerated = a_star_search(start)
+        for action, new_state in path:
+            print("%s -> %s" % (action, new_state))
+        print("%s visited out of %s generated." % (nvisited, ngenerated))
+    print("Euclidean distance:")
+    heuristic = euclidean_distance
+    print_results()
+    print("Manhattan distance:")
+    heuristic = manhattan_distance
+    print_results()
+    print("Path distance:")
+    generate_distances()
+    heuristic = path_distance
+    print_results()
 
 if __name__ == "__main__":
     main()
