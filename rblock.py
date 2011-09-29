@@ -62,9 +62,12 @@ class State(object):
     
     def __equal__(self, o):
         return self.x == o.x and self.y == o.y and self.die == o.die
+    def __str__(self):
+        return "<%s, %s %s>" % (self.x, self.y, self.die)
+    __repr__ = __str__
     
     def __hash__(self):
-        return hash((x, y, dice))
+        return hash((self.x, self.y, self.die))
     
 
 class Node(object):
@@ -96,6 +99,11 @@ class Node(object):
     def __lt__(self, other):
         """Used by built-in sorting algorithms."""
         return self.cost < other.cost
+    
+    def __str__(self):
+        return "%s | %s" % (self.state, self.cost)
+    __repr__ = __str__
+    
 
 def uniform_cost_search(start, goal):
     assert start in graph, "Invalid start state '%s'" % start
