@@ -100,7 +100,7 @@ class Node(object):
             return []
         else:
             path = self.parent.unwind()
-            path.append(self.state.action)
+            path.append((self.state.action, self.state))
             return path
     
     def is_outdated(self):
