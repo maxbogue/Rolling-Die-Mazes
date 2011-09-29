@@ -113,14 +113,16 @@ class Node(object):
     __repr__ = __str__
     
 
-def a_star_search(start, goal_loc):
+def a_star_search(start):
+    global num_visited, num_generated, goal_loc, frontier, visited
+    frontier = []
+    visited = {}
+    num_visited = 1
+    num_generated = 0
     def is_goal(state):
         return (state.x, state.y) == goal_loc and state.die[0] == 1
     frontier.append(Node(start, 0, None))
     visited[start] = 0
-    global num_visited, num_generated
-    num_visited = 1
-    num_generated = 0
     while True:
         if len(frontier) == 0:
             return ["FAIL"], num_visited, num_generated
