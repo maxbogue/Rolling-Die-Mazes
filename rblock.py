@@ -36,7 +36,18 @@ class State(object):
     
     @staticmethod
     def is_valid(state):
-        return True
+        """Tests a state for validity.
+        
+        Returns False if the state is off the board, a "*" space,
+        or has a 6 on top.
+        
+        """
+        return (
+            0 <= state.x < len(puzzle) and
+            0 <= state.y < len(puzzle[0]) and
+            puzzle[state.x][state.y] != '*' and
+            state.die[0] != 6
+        )
     
     def neighbors(self):
         """Naively return ALL neighbors of this state."""
