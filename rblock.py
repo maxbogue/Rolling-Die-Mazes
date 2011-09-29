@@ -23,6 +23,7 @@ frontier = []
 num_visited = 0
 num_generated = 0
 
+# The heuristic function
 heuristic = lambda state: 0
 
 def print_puzzle(other=None):
@@ -68,9 +69,11 @@ class State(object):
         ])
     
     def __eq__(self, o):
+        """For dicts/sets."""
         return isinstance(o, State) and self.x == o.x and self.y == o.y and self.die == o.die
     
     def __hash__(self):
+        """For dicts/sets."""
         return hash((self.x, self.y, self.die))
     
     def __str__(self):
@@ -86,6 +89,7 @@ class Node(object):
         self.parent = parent
     
     def expand(self):
+        """Expand this node and add its state's neighbors to the frontier."""
         global num_generated, num_visited
         visited[self.state] = self.cost
         num_visited += 1
@@ -96,6 +100,7 @@ class Node(object):
                 num_generated += 1
     
     def unwind(self):
+        """Unwind the path of actions and states taken to reach this ndoe."""
         if self.parent == None:
             return []
         else:
@@ -104,6 +109,7 @@ class Node(object):
             return path
     
     def is_outdated(self):
+        """See if a better cost has been found for this node's state."""
         return self.state in visited and visited[self.state] < self.cost
     
     def __lt__(self, other):
@@ -116,6 +122,7 @@ class Node(object):
     
 
 def a_star_search(start):
+    """Perform A* search."""
     global num_visited, num_generated, goal_loc, frontier, visited
     frontier = []
     visited = {}
@@ -129,6 +136,8 @@ def a_star_search(start):
         if len(frontier) == 0:
             return ["FAIL"], num_visited, num_generated
         node = None
+        # This loop skips outdated nodes so I don't have to search through
+        # the frontier for them.
         while not node or node.is_outdated():
             node = heappop(frontier)
         if is_goal(node.state):
