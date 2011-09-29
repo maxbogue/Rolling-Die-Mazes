@@ -36,7 +36,7 @@ class State(object):
     
     @staticmethod
     def is_valid(state):
-        return 0 <= state.x < 
+        return True
     
     def neighbors(self):
         """Naively return ALL neighbors of this state."""
