@@ -25,9 +25,11 @@ num_generated = 0
 
 heuristic = lambda state: 0
 
-def print_puzzle():
-    for y in reversed(range(len(puzzle[0]))):
-        print("".join([puzzle[x][y] for x in range(len(puzzle))]))
+def print_puzzle(other=None):
+    """Prints a puzzle configuration."""
+    p = other if other else puzzle
+    for y in reversed(range(len(p[0]))):
+        print("".join([str(p[x][y]) for x in range(len(p))]))
 
 def valid_space(x, y):
     """Tests whether the given x, y is in the puzzle space and not a '*'."""
