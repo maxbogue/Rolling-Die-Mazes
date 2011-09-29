@@ -7,8 +7,8 @@ Author: Max Bogue
 from heapq import heappush, heappop
 from sys import argv, exit
 
-# A mapping of node names to a list of (neighbor name, edge cost) pairs.
-graph = {}
+# A list of lists of puzzle symbols (.*SG).
+puzzle = []
 
 # A mapping of node names to lowest found cost.
 visited = {}
@@ -102,13 +102,37 @@ def uniform_cost_search(start, goal):
             state.expand()
 
 if __name__ == "__main__":
-    if len(argv) < 4:
-        print("Usage: rsearch.py map_file start_node goal_node")
+    if len(argv) < 2:
+        print("Usage: rblock.py puzzle_file")
         exit(1)
+    start = None
+    goal_loc = None
     with open(argv[1], 'r') as f:
-        def line_to_edge(line):
-            parts = line.split(",")
-            return (parts[0], parts[1], int(parts[2]))
-        edges = map(line_to_edge, f.read().splitlines())
-        init_graph(edges)
-    print(uniform_cost_search(argv[2], argv[3]))
+        lines = f.read().splitlines()
+        lines.reverse()
+    # Validate input and find the start state.
+    puzzle = [[] for _ in range(len(lines[0]))]
+    for y, line in enumerate(lines):
+        for x, c in enumerate(line):
+            puzzle[x].append(c)
+            if c not in '.*SG':
+                print("Invalid character '%s' detected!" % c)
+                exit(1)
+            if c == 'S':
+                if start != None:
+                    print("Multiple start states detected!")
+                    exit(1)
+                start = State(x, y, (1, 2, 3), None)
+            if c == 'G':
+                if goal_loc != None:
+                    print("Multiple goal states detected!")
+                    exit(1)
+                goal_loc = (x, y)
+    if start == None:
+        print("No start state found!")
+        exit(1)
+    if goal_loc == None:
+        print("No goal location detected!")
+        exit(1)
+    print_puzzle()
+    # print(a_star_search(start, goal))
