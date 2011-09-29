@@ -105,20 +105,21 @@ class Node(object):
     __repr__ = __str__
     
 
-def uniform_cost_search(start, goal):
-    assert start in graph, "Invalid start state '%s'" % start
-    assert goal in graph, "Invalid goal state '%s'" % goal
+def uniform_cost_search(start, goal_loc):
+    def is_goal(state):
+        return (state.x, state.y) == goal_loc
     frontier.append(Node(start, 0, None))
+    visited[start] = 0
     while True:
         if len(frontier) == 0:
             return ["FAIL"]
-        state = None
-        while not state or state.is_outdated():
-            state = heappop(frontier)
-        if state.node == goal:
-            return state.unwind()
+        node = None
+        while not node or node.is_outdated():
+            node = heappop(frontier)
+        if is_goal(node.state):
+            return node.unwind()
         else:
-            state.expand()
+            node.expand()
 
 if __name__ == "__main__":
     if len(argv) < 2:
@@ -153,5 +154,4 @@ if __name__ == "__main__":
     if goal_loc == None:
         print("No goal location detected!")
         exit(1)
-    print_puzzle()
-    # print(a_star_search(start, goal))
+    print(uniform_cost_search(start, goal_loc))
