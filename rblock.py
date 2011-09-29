@@ -29,10 +29,6 @@ def print_puzzle():
     for y in reversed(range(len(puzzle[0]))):
         print("".join([puzzle[x][y] for x in range(len(puzzle))]))
 
-def init_graph(edges):
-    for a, b, cost in edges:
-        graph.setdefault(a, []).append((b, cost))
-        graph.setdefault(b, []).append((a, cost))
 
 class State(object):
     """Represents a configuration of the problem space."""
