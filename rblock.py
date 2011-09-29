@@ -16,6 +16,10 @@ visited = {}
 # A heap of States.
 frontier = []
 
+# Global counters for number of states visited and generated.
+num_visited = 0
+num_generated = 0
+
 def print_puzzle():
     for y in reversed(range(len(puzzle[0]))):
         print("".join([puzzle[x][y] for x in range(len(puzzle))]))
@@ -79,11 +83,14 @@ class Node(object):
         self.parent = parent
     
     def expand(self):
+        global num_generated, num_visited
         visited[self.state] = self.cost
+        num_visited += 1
         for neighbor in self.state.neighbors():
             next_cost = self.cost + 1
             if neighbor not in visited or next_cost < visited[neighbor]:
                 heappush(frontier, Node(neighbor, next_cost, self))
+                num_generated += 1
     
     def unwind(self):
         if self.parent == None:
@@ -110,14 +117,17 @@ def uniform_cost_search(start, goal_loc):
         return (state.x, state.y) == goal_loc
     frontier.append(Node(start, 0, None))
     visited[start] = 0
+    global num_visited, num_generated
+    num_visited = 1
+    num_generated = 0
     while True:
         if len(frontier) == 0:
-            return ["FAIL"]
+            return ["FAIL"], num_visited, num_generated
         node = None
         while not node or node.is_outdated():
             node = heappop(frontier)
         if is_goal(node.state):
-            return node.unwind()
+            return node.unwind(), num_visited, num_generated
         else:
             node.expand()
 
