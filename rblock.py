@@ -131,7 +131,7 @@ def uniform_cost_search(start, goal_loc):
         else:
             node.expand()
 
-if __name__ == "__main__":
+def main():
     if len(argv) < 2:
         print("Usage: rblock.py puzzle_file")
         exit(1)
@@ -141,6 +141,7 @@ if __name__ == "__main__":
         lines = f.read().splitlines()
         lines.reverse()
     # Validate input and find the start state.
+    global puzzle
     puzzle = [[] for _ in range(len(lines[0]))]
     for y, line in enumerate(lines):
         for x, c in enumerate(line):
@@ -165,3 +166,6 @@ if __name__ == "__main__":
         print("No goal location detected!")
         exit(1)
     print(uniform_cost_search(start, goal_loc))
+
+if __name__ == "__main__":
+    main()
