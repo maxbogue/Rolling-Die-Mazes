@@ -114,7 +114,7 @@ class Node(object):
 
 def uniform_cost_search(start, goal_loc):
     def is_goal(state):
-        return (state.x, state.y) == goal_loc
+        return (state.x, state.y) == goal_loc and state.die[0] == 1
     frontier.append(Node(start, 0, None))
     visited[start] = 0
     global num_visited, num_generated
