@@ -23,6 +23,8 @@ frontier = []
 num_visited = 0
 num_generated = 0
 
+heuristic = lambda state: 0
+
 def print_puzzle():
     for y in reversed(range(len(puzzle[0]))):
         print("".join([puzzle[x][y] for x in range(len(puzzle))]))
@@ -90,7 +92,7 @@ class Node(object):
         visited[self.state] = self.cost
         num_visited += 1
         for neighbor in self.state.neighbors():
-            next_cost = self.cost + 1
+            next_cost = self.cost + 1 + heuristic(neighbor)
             if neighbor not in visited or next_cost < visited[neighbor]:
                 heappush(frontier, Node(neighbor, next_cost, self))
                 num_generated += 1
@@ -115,7 +117,7 @@ class Node(object):
     __repr__ = __str__
     
 
-def uniform_cost_search(start, goal_loc):
+def a_star_search(start, goal_loc):
     def is_goal(state):
         return (state.x, state.y) == goal_loc and state.die[0] == 1
     frontier.append(Node(start, 0, None))
@@ -167,7 +169,7 @@ def main():
     if goal_loc == None:
         print("No goal location detected!")
         exit(1)
-    print(uniform_cost_search(start, goal_loc))
+    print(a_star_search(start, goal_loc))
 
 if __name__ == "__main__":
     main()
