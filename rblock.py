@@ -29,6 +29,11 @@ def print_puzzle():
     for y in reversed(range(len(puzzle[0]))):
         print("".join([puzzle[x][y] for x in range(len(puzzle))]))
 
+def valid_space(x, y):
+    """Tests whether the given x, y is in the puzzle space and not a '*'."""
+    return (0 <= x < len(puzzle) and
+        0 <= y < len(puzzle[0]) and
+        puzzle[x][y] != '*')
 
 class State(object):
     """Represents a configuration of the problem space."""
@@ -47,12 +52,7 @@ class State(object):
         or has a 6 on top.
         
         """
-        return (
-            0 <= state.x < len(puzzle) and
-            0 <= state.y < len(puzzle[0]) and
-            puzzle[state.x][state.y] != '*' and
-            state.die[0] != 6
-        )
+        return valid_space(state.x, state.y) and state.die[0] != 6
     
     def neighbors(self):
         """Return all valid neighbors of this state."""
