@@ -10,6 +10,9 @@ from sys import argv, exit
 # A list of lists of puzzle symbols (.*SG).
 puzzle = []
 
+# The goal location (x, y).
+goal_loc = None
+
 # A mapping of node names to lowest found cost.
 visited = {}
 
@@ -135,13 +138,12 @@ def main():
     if len(argv) < 2:
         print("Usage: rblock.py puzzle_file")
         exit(1)
+    global puzzle, goal_loc
     start = None
-    goal_loc = None
     with open(argv[1], 'r') as f:
         lines = f.read().splitlines()
         lines.reverse()
     # Validate input and find the start state.
-    global puzzle
     puzzle = [[] for _ in range(len(lines[0]))]
     for y, line in enumerate(lines):
         for x, c in enumerate(line):
